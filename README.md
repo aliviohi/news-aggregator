@@ -19,6 +19,10 @@ The application sends requests to all three APIs, processes and normalizes the r
 - **Fast & Efficient**: Built with Vite for optimal performance.
 - **Docker Support**: Easily containerized for deployment.
 
+## Live Demo
+
+[Live Demo](https://aliviohi.github.io/news-aggregator/) (NewAPI works at localhost, in demo we use only 2 apis)
+
 ## Installation
 
 1. Clone the repository:
@@ -53,10 +57,6 @@ docker run -p 3000:3000 news-aggregator
 ```
 
 The application will be accessible at `http://localhost:3000`.
-
-## Live Demo
-
-[Live Demo](#) (Replace `#` with the actual live demo link)
 
 ---
 

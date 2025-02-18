@@ -13,6 +13,16 @@ const NEWS_API_KEY = import.meta.env.VITE_APP_NEWS_API_KEY;
 const GUARDIAN_API_KEY = import.meta.env.VITE_APP_GUARDIAN_API_KEY;
 const NYT_API_KEY = import.meta.env.VITE_APP_NYT_API_KEY;
 
+const isLocalhost = (): boolean => {
+  return Boolean(
+    window.location.hostname === "localhost" ||
+      window.location.hostname === "[::1]" ||
+      window.location.hostname.match(
+        /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
+      )
+  );
+};
+
 export class NewsService {
   private static instance: NewsService;
 
@@ -29,18 +39,27 @@ export class NewsService {
     query?: string,
     category?: string
   ): Promise<Article[]> {
-    const response = await axios.get<NewsAPIResponse>(
-      `https://newsapi.org/v2/everything`,
-      {
-        params: {
-          q: query || "",
-          category,
-          apiKey: NEWS_API_KEY,
-        },
-      }
-    );
+    if (isLocalhost()) {
+      const response = await axios.get<NewsAPIResponse>(
+        `https://newsapi.org/v2/everything`,
+        {
+          params: {
+            q: query || "",
+            category,
+            apiKey: NEWS_API_KEY,
+          },
+        }
+      );
 
-    return this.transformNewsAPIResponse(response.data);
+      return this.transformNewsAPIResponse(response.data);
+    } else {
+      console.warn("NewsAPI is only available on localhost for free tier.");
+      return this.transformNewsAPIResponse({
+        status: "ok",
+        totalResults: 0,
+        articles: [],
+      });
+    }
   }
 
   async fetchFromGuardian(
